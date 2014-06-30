@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>indiefinger</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>indiefinger</h1>
+    <h2>a proxy for webfinger</h2>
+    <p>indiefinger provides a webfinger-compatible endpoint which you can use to get information about URLs and email addresses. If the given target resource operates its own webfinger service, this acts as a transparent proxy. If not, we'll attempt to discover links from that resource by parsing HTTP and HTML links.</p>
+
+    <h2>make your first indiefinger request!</h2>
+    <form action="/.well-known/webfinger" method="get">
+    http://indiefinger.com/.well-known/webfinger?resource=<input type="text" placeholder="URL or email address" name="resource">
+    <input type="submit" value="go">
+    </form>
+  </body>
+</html>

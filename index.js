@@ -3,6 +3,8 @@ var parseEmail = require('email-addresses').parseOneAddress
 var URI = require('URIjs')
 var http = require('http')
 var url = require('url')
+var ecstatic = require('ecstatic')
+var path = require('path')
 
 function indiefinger (principal, cb) {
   var type = detectType(principal)
@@ -45,8 +47,19 @@ function detectType(x) {
 module.exports = indiefinger
 
 if (process.env.PORT) {
+
+  var static = ecstatic({root: path.join(__dirname, 'public')})
+
   http.createServer(function (req, res) {
-    var qs = url.parse(req.url, true).query
+
+    var requrl = url.parse(req.url, true) 
+    console.log(requrl)
+    if (requrl.pathname !== '/.well-known/webfinger') {
+
+      return static(req, res)
+    }
+
+    var qs = requrl.query
     console.log(req.url, qs)
 
     if (!qs.resource) {
