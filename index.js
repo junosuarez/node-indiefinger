@@ -73,8 +73,8 @@ if (process.env.PORT) {
         console.error(e)
         return res.end('an error occurred')
       }
-      res.setHeader('content-type','application/json')
-      res.setHeader('access-control','*')
+      res.setHeader('content-type','application/jrd+json')
+      res.setHeader('access-control-allow-origin','*')
       res.end(JSON.stringify(jrd))
     })
 
