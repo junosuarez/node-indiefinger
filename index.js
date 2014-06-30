@@ -55,12 +55,11 @@ if (process.env.PORT) {
     var requrl = url.parse(req.url, true) 
     console.log(requrl)
     if (requrl.pathname !== '/.well-known/webfinger') {
-
       return static(req, res)
     }
 
     var qs = requrl.query
-    console.log(req.url, qs)
+    console.log(qs)
 
     if (!qs.resource) {
       res.statusCode = 400
@@ -73,6 +72,15 @@ if (process.env.PORT) {
         console.error(e)
         return res.end('an error occurred')
       }
+
+      if (qs.rel) {
+        // filter to only requested rels
+        var rels = [].concat(qs.rel)
+        jrd.links = jrd.links.filter(function (link) {
+          return ~rels.indexOf(link.rel)
+        })
+      }
+
       res.setHeader('content-type','application/jrd+json')
       res.setHeader('access-control-allow-origin','*')
       res.end(JSON.stringify(jrd))
