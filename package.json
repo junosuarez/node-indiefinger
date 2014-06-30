@@ -26,6 +26,6 @@
   "dependencies": {
     "email-addresses": "^1.1.1",
     "URIjs": "^1.13.2",
-    "link-rel-parser": "^0.1.0"
+    "link-rel-parser": "^0.1.1"
   }
 }
