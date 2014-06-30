@@ -1,5 +1,77 @@
-function indiefinger () {
-  
+var linkRelParser = require('link-rel-parser')
+var parseEmail = require('email-addresses').parseOneAddress
+var URI = require('URIjs')
+var http = require('http')
+var url = require('url')
+
+function indiefinger (principal, cb) {
+  var type = detectType(principal)
+  switch(type) {
+    case 'url':
+      return linkRelParser(principal, function (e, links) {
+        if (e) { return cb(e) }
+        var jrd = {
+          subject: principal,
+          links: Object.keys(links).reduce(function (flat, rel) {
+            var nextLinks = links[rel].map(function (href) {
+              return {
+                rel: rel,
+                href: href
+              }
+            })
+            return flat.concat(nextLinks)
+          }, [])
+        }
+        cb(e, jrd)
+      })
+
+    case 'email':
+      var email = parseEmail(principal)
+      console.log(email)
+      principal = new URI('https://' + email.domain)
+        .directory('~' + email.local)
+        .href()
+      return indiefinger(principal, cb)
+
+    case 'default':
+      return cb(Error('invalid principal: ' + principal))
+  }
 }
 
+
+function detectType(x) {
+  return ~x.indexOf('@') ? 'email' : 'url'
+}
 module.exports = indiefinger
+
+if (process.env.PORT) {
+  http.createServer(function (req, res) {
+    var qs = url.parse(req.url, true).query
+    console.log(req.url, qs)
+
+    if (!qs.resource) {
+      res.statusCode = 400
+      return res.end('missing required parameter resource')
+    }
+
+    indiefinger(qs.resource, function (e, jrd) {
+      if (e) {
+        res.statusCode = 500
+        console.error(e)
+        return res.end('an error occurred')
+      }
+      res.setHeader('content-type','application/json')
+      res.setHeader('access-control','*')
+      res.end(JSON.stringify(jrd))
+    })
+
+  }).listen(process.env.PORT, function (e) {
+    if (e) { return console.error(e) }
+    console.log('listening on ' + process.env.PORT)
+  })
+}
+
+// e.g.
+// indiefinger('http://jden.us', function (e, l) {
+//   console.log(e, l)
+// })
