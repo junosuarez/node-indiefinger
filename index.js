@@ -53,7 +53,7 @@ if (process.env.PORT) {
   http.createServer(function (req, res) {
 
     var requrl = url.parse(req.url, true) 
-    console.log(requrl)
+
     if (requrl.pathname !== '/.well-known/webfinger') {
       return static(req, res)
     }
