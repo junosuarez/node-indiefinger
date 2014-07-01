@@ -14,5 +14,22 @@
     http://indiefinger.org/.well-known/webfinger?resource=<input type="text" placeholder="URL or email address" name="resource">
     <input type="submit" value="go">
     </form>
+
+    <h2>use indiefinger from the command line</h2>
+    <p>since indiefinger is built on webfinger, you can run it with curl</p>
+
+    <blockquote><code>$ curl http://indiefinger.org/.well-known/webfinger?resource=http://indiefinger.org</code></blockquote>
+
+    <p>or, with <a href="http://nodejs.org/">node.js</a> installed, you can download and run indiefinger as a command line tool.</p>
+
+    <blockquote><code>$ npm install -g indiefinger-cli</code></blockquote>
+
+    <p>now, you can use indiefinger (installed as <code>ifinger</code>):</p>
+
+    <blockquote><code>$ ifinger indiefinger.org</code></blockquote>
+
+    <h3>credits</h3>
+    <p>indiefinger is provided by <a href="http://jden.us" rel="author">jden</a> and dedicated to the public domain under <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="license">CC-0</a>
+    </p>
   </body>
 </html>
